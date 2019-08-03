@@ -1,16 +1,24 @@
-This project was done with Exensa.
+This is a end of studies' project, realized with Exensa.
 
-# Setup
+# 1. Packages
 
+Each of our packages have its own README.md and requirements.txt so the project is modulable.
+
+If you wish to install dependencies for the whole project:
 ```sh
 pip install --user -r requirements.txt
 ```
 
-# Pipeline overview
+# Dataset preprocessing | ```./preprocessing```
 
-## Dataset & Preprocessing | ```./data```
+Source code and more information [available here](https://github.com/becxer/cnn-dailymail/).
 
-Source code [available here](https://github.com/becxer/cnn-dailymail/).
-Make sure to read the README of the data directory.
+## Content
+* Instructions on how to download dataset.
+* Instructions on how to use the preprocessing scipt.
 
-* Tokenization with Stanford CoreNLP PTBTokenizer
+## Overview
+* Language detection **TODO**
+* Tokenization with Stanford CoreNLP PTBTokenizer **TODO** Tokenizer as variable
+* Split in train, test and validation sets.
+* Binarization with TensorFlow
