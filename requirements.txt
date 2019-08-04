@@ -1,2 +1,3 @@
--r preprocessing/prep_requierments.txt
+-r src/preprocessing/requirements.txt
+-r src/modeling/requirements.txt
 textacy
