@@ -7,7 +7,20 @@ import collections
 import tensorflow as tf
 from tensorflow.core.example import example_pb2
 
-from config import *
+SRC_DIR, _ = os.path.split(os.path.dirname(os.path.abspath(__file__)))
+PROJECT_DIR, _ = os.path.split(SRC_DIR)
+
+DATA_DIR = os.path.join(PROJECT_DIR, "data/cnn-dailymail")
+
+ALL_TRAIN_URLS = os.path.join(DATA_DIR, "url_lists/all_train.txt")
+ALL_VAL_URLS = os.path.join(DATA_DIR, "url_lists/all_val.txt")
+ALL_TEST_URLS = os.path.join(DATA_DIR, "url_lists/all_test.txt")
+
+CNN_TOKENIZED_STORIES_DIR = os.path.join(DATA_DIR, "cnn_stories_tokenized")
+DM_TOKENIZED_STORIES_DIR = os.path.join(DATA_DIR, "dm_stories_tokenized")
+FINISHED_FILES_DIR = os.path.join(DATA_DIR, "finished_files")
+
+CHUNKS_DIR = os.path.join(FINISHED_FILES_DIR, "chunked")
 
 
 dm_single_close_quote = u'\u2019' # unicode
