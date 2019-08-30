@@ -24,7 +24,7 @@ ALL_TEST_URLS = os.path.join(DATA_DIR, "url_lists/all_test.txt")
 
 CNN_TOKENIZED_STORIES_DIR = os.path.join(DATA_DIR, "cnn_stories_tokenized_v2")
 DM_TOKENIZED_STORIES_DIR = os.path.join(DATA_DIR, "dm_stories_tokenized_v2")
-FINISHED_FILES_DIR = os.path.join(DATA_DIR, "finished_files")
+FINISHED_FILES_DIR = os.path.join(DATA_DIR, "finished_files_v2")
 
 CHUNKS_DIR = os.path.join(FINISHED_FILES_DIR, "chunked")
 
@@ -113,8 +113,9 @@ def read_text_file(text_file):
       lines.append(line.strip())
   return lines
 
-REMAP = { "-lbr-" : "(", "-rbr-": ")", "-lcb-": "{", "-rcb-": "}",
-               "-lsb-": "[", "-rsb-": "]" , "``": '"', "''" : '"' }
+
+REMAP = {"-lbr-": "(", "-rbr-": ")", "-lcb-": "{", "-rcb-": "}",
+         "-lsb-": "[", "-rsb-": "]", "``": '"', "''": '"'}
 
 
 def hashhex(s):
@@ -169,12 +170,6 @@ def get_art_abs_from_text(story_file):
     else:
       article_lines.append(line)
 
-  # Make article into a single string
-  #article = ' '.join(article_lines)
-
-  # Make abstract into a signle string, putting <s> and </s> tags around the sentences
-  #abstract = ' '.join(["%s %s %s" % (SENTENCE_START, sent, SENTENCE_END) for sent in highlights])
-
   return article_lines, highlights
 
 
@@ -193,59 +188,34 @@ def get_art_abs_from_json(json_file):
           flag = False
       else:
           article_tokens_list.append(tokens)
-  article_tokens_list = [clean(' '.join(sent)).split() for sent in article_tokens_list]
-  abstract_tokens_list = [clean(' '.join(sent)).split() for sent in abstract_tokens_list]
+  article_tokens_list = [clean(' '.join(sent)).split()
+                         for sent in article_tokens_list]
+  abstract_tokens_list = [clean(' '.join(sent)).split()
+                          for sent in abstract_tokens_list]
 
   return article_tokens_list, abstract_tokens_list
 
 
+def greedy_selection(article_tokens_list, abstract_tokens_list, summary_size):
+    """
+    From an abstract summary, generate an extractive summary for the given article.
 
+    :param article_tokens_list:   List of sentences representing a document.
+                            Each sentence is a list of word.
+                            Sentence are here tokenized by Stanford Core NLP.
 
-"""
-def greedy_selection(article_sent_list, abstract_sent_list, summary_size):
-  From an abstract summary, generate an extractive summary for the given article.
+    :param abstract_tokens_list:  List of sentence representing the abstract given for the document.
+                                  Format is the same as article_tokens_list.
 
-  :param article:   List of sentence. Sentence are here tokenized by Stanford Core
-                    NLP PTBTokenizer.
-
-  :returns:         An array of index pointing to the selected sentences.
-  max_rouge = 0.0
-  rouge = Rouge()
-  abstract = ' '.join([s for s in abstract_sent_list])
-
-  selected = []
-  for s in range(summary_size):
-      cur_max_rouge = max_rouge
-      cur_id = -1
-      for i in range(len(article_sent_list)):
-          if (i in selected):
-              continue
-          candidate = article_sent_list[i]
-          rouge_scores = rouge.get_scores(candidate, abstract)
-          rouge_1 = rouge_scores[0]["rouge-1"]["f"]
-          rouge_2 = rouge_scores[0]["rouge-2"]["f"]
-          rouge_score = rouge_1 + rouge_2
-          print(rouge_score)
-          if rouge_score > cur_max_rouge:
-              print('OK: ', i)
-              cur_max_rouge = rouge_score
-              cur_id = i
-      if (cur_id == -1):
-          return selected
-      selected.append(cur_id)
-      print('Adding: ', cur_id)
-      max_rouge = cur_max_rouge
-  return sorted(selected)
-  """
-
-def greedy_selection(doc_sent_list, abstract_sent_list, summary_size):
+    :returns:         An array of index pointing to the selected sentences in article_tokens_list.
+    """
     def _rouge_clean(s):
         return re.sub(r'[^a-zA-Z0-9 ]', '', s)
 
     max_rouge = 0.0
-    abstract = sum(abstract_sent_list, [])
+    abstract = sum(abstract_tokens_list, [])
     abstract = _rouge_clean(' '.join(abstract)).split()
-    sents = [_rouge_clean(' '.join(s)).split() for s in doc_sent_list]
+    sents = [_rouge_clean(' '.join(s)).split() for s in article_tokens_list]
     evaluated_1grams = [_get_word_ngrams(1, [sent]) for sent in sents]
     reference_1grams = _get_word_ngrams(1, [abstract])
     evaluated_2grams = [_get_word_ngrams(2, [sent]) for sent in sents]
@@ -277,29 +247,13 @@ def greedy_selection(doc_sent_list, abstract_sent_list, summary_size):
     return sorted(selected)
 
 
-def gen_oracle_summary(story_file, out_path):
+def gen_oracle_summary(story_file):
+  """
+    Re-write the abstract summaries to extractive summaries using a greedy algorithm.
+  """
   article_tokens_list, abstract_tokens_list = get_art_abs_from_json(story_file)
-  print("\nABSTRACT\n")
-  print(abstract_tokens_list)
-  print("\nLen abstract:", len(abstract_tokens_list))
   oracles_ids = greedy_selection(article_tokens_list, abstract_tokens_list, 3)
-
-  print("\nSUMMARY\n")
-  for oi in oracles_ids:
-    print(article_tokens_list[oi])
-    print('\n')
-  print("\nLen oracle summary:", len(oracles_ids))
-  data_dict = {"article": article_tokens_list, "abstract": abstract_tokens_list, "summary_ids": oracles_ids}
-  torch.save(data_dict, out_path)
-
-"""
-  with open(out_path, 'w+') as writer:
-    for line in article_tokens_list:
-      writer.write(line + '\n\n')
-    for oi in oracles_ids:
-      writer.write('@highlight\n\n')
-      writer.write(article_tokens_list[oi] + '\n\n')
-"""
+  return article_tokens_list, abstract_tokens_list, oracles_ids
 
 
 def write_to_bin(url_file, out_file, makevocab=False):
@@ -307,7 +261,7 @@ def write_to_bin(url_file, out_file, makevocab=False):
   print("Making bin file for URLs listed in %s..." % url_file)
   url_list = read_text_file(url_file)
   url_hashes = get_url_hashes(url_list)
-  story_fnames = [s+".story" for s in url_hashes]
+  story_fnames = [s+".story.json" for s in url_hashes]
   num_stories = len(story_fnames)
 
   if makevocab:
@@ -335,22 +289,30 @@ def write_to_bin(url_file, out_file, makevocab=False):
         raise Exception("Tokenized stories directories %s and %s contain correct number of files but story file %s found in neither." % (
             CNN_TOKENIZED_STORIES_DIR, DM_TOKENIZED_STORIES_DIR, s))
 
-      # Get the strings to write to .bin file
-      article_lines, highlights = get_art_abs_from_text(story_file)
+      # Get the strings to write to binary: abstact is the abstraction-based summary and
+      # oracles ids refer to sentences forming the target extractive summary.
+      article_tokens_list, abstract_tokens_list, oracles_ids = gen_oracle_summary(
+          story_file)
 
-      # Make article into a single string
-      article = ' '.join(article_lines)
+      # Make abstract and article into a signle string, putting <s> and </s> tags around the sentences
+      article_sent_list = [' '.join(token_list)
+                           for token_list in article_tokens_list]
+      article = ' '.join(
+          ["%s %s %s" % (SENTENCE_START, sent, SENTENCE_END) for sent in article_sent_list])
 
-      # Make abstract into a signle string, putting <s> and </s> tags around the sentences
+      abstract_sent_list = [' '.join(token_list)
+                            for token_list in abstract_tokens_list]
       abstract = ' '.join(
-          ["%s %s %s" % (SENTENCE_START, sent, SENTENCE_END) for sent in highlights])
+          ["%s %s %s" % (SENTENCE_START, sent, SENTENCE_END) for sent in abstract_sent_list])
 
       # Write to tf.Example
       tf_example = example_pb2.Example()
       tf_example.features.feature['article'].bytes_list.value.extend([
                                                                      article.encode()])
-      tf_example.features.feature['summary'].bytes_list.value.extend([
-                                                                     abstract.encode()])
+      tf_example.features.feature['abstract'].bytes_list.value.extend([
+                                                                      abstract.encode()])
+      tf_example.features.feature['oracle_ids'].int64_list.value.extend(
+          oracles_ids)
       tf_example_str = tf_example.SerializeToString()
       str_len = len(tf_example_str)
       writer.write(struct.pack('q', str_len))

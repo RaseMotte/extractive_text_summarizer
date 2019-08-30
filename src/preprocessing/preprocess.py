@@ -3,9 +3,9 @@ import sys
 from data_builder import num_expected_cnn_stories, num_expected_dm_stories
 from data_builder import check_num_stories, tokenize_stories, write_to_bin, chunk_all, gen_oracle_summary
 from data_builder import CNN_TOKENIZED_STORIES_DIR, DM_TOKENIZED_STORIES_DIR, FINISHED_FILES_DIR
+from data_builder import ALL_TEST_URLS, ALL_TRAIN_URLS, ALL_VAL_URLS
 
 if __name__ == '__main__':
-  """
   if len(sys.argv) != 3:
     print("USAGE: python make_datafiles.py <cnn_stories_dir> <dailymail_stories_dir>")
     sys.exit()
@@ -23,18 +23,15 @@ if __name__ == '__main__':
     os.makedirs(DM_TOKENIZED_STORIES_DIR)
   if not os.path.exists(FINISHED_FILES_DIR):
     os.makedirs(FINISHED_FILES_DIR)
-  """
+
   # Run stanford tokenizer on both stories dirs, outputting to tokenized stories directories
-  #tokenize_stories(cnn_stories_dir, CNN_TOKENIZED_STORIES_DIR)
-  #tokenize_stories(dm_stories_dir, DM_TOKENIZED_STORIES_DIR)
+  tokenize_stories(cnn_stories_dir, CNN_TOKENIZED_STORIES_DIR)
+  tokenize_stories(dm_stories_dir, DM_TOKENIZED_STORIES_DIR)
 
-  # Re-write the abstract summaries to extractive summaries using a greedy algorithme
-  gen_oracle_summary("/Users/claire/Projects/extractive_text_summarizer/data/cnn-dailymail/cnn_stories_tokenized_v2/99a11d1026dde1b0d682873dd25c96a7a61abdb9.story.json", './test.story')
-
-  # Read the tokenized stories, do a little postprocessing then write to bin files
-  #write_to_bin(ALL_TEST_URLS, os.path.join(FINISHED_FILES_DIR, "test.bin"))
-  #write_to_bin(ALL_VAL_URLS, os.path.join(FINISHED_FILES_DIR, "val.bin"))
-  #write_to_bin(ALL_TRAIN_URLS, os.path.join(FINISHED_FILES_DIR, "train.bin"), makevocab=True)
+  # Read the tokenized stories, do a little postprocessing, generate the summary, then write to bin files
+  write_to_bin(ALL_TEST_URLS, os.path.join(FINISHED_FILES_DIR, "test.bin"))
+  write_to_bin(ALL_VAL_URLS, os.path.join(FINISHED_FILES_DIR, "val.bin"))
+  write_to_bin(ALL_TRAIN_URLS, os.path.join(FINISHED_FILES_DIR, "train.bin"), makevocab=True)
 
   # Chunk the data. This splits each of train.bin, val.bin and test.bin into smaller chunks, each containing e.g. 1000 examples, and saves them in finished_files/chunks
-  #chunk_all()
+  chunk_all()

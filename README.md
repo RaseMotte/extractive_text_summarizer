@@ -1,10 +1,17 @@
 This is a end of studies' project, realized with Exensa.
+----
+TODO
+
+[] Data reader from .bin for model
+[] Logger
+[] Benchmarks
+[] Gensim summarizer
+[] README
+----
 
 # 1. Packages
 
-Each of our packages have its own README.md and requirements.txt so the project is modulable.
-
-If you wish to install dependencies for the whole project:
+Install dependencies for the whole project:
 ```sh
 pip install --user -r requirements.txt
 ```
@@ -31,16 +38,19 @@ Source code and more information [available here](https://github.com/becxer/cnn-
 
 ## Overview
 * Language detection **TODO**
-* Tokenization with Stanford CoreNLP PTBTokenizer **TODO** Tokenizer as variable
+* Sentence and word tokenization with Stanford CoreNLP
 * Split in train, test and validation sets.
 * Binarization with TensorFlow
 
-Produced files are placed in model.
+Produced files are placed in ./data/cnn-dailymail/finished_files_v2/.
 
 
 ## Model structure, training and evaluation | ```./src/modeling```
 
-* Model structure interface that must be implemented by any new model structure.
 * All model tested or to test.
+* A logger
+* Tools for benchmarking
 
 ### Models
+
+* Gensim **FIME**
