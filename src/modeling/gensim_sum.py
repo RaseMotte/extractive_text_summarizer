@@ -6,7 +6,7 @@ from tensorflow.core.example import example_pb2
 from rouge import Rouge
 
 from benchmark import log_time
-from load_datafiles import stringGenerator
+from load_datafiles import load_as_tensors
 from logger import ModelLogger
 
 GENSIM_DATA_DIR = '../../model/gensim_sum'
@@ -68,7 +68,14 @@ if __name__ == "__main__":
         print("USAGE: python gensim_sum.py <binary_file_dir>")
         sys.exit()
     data_path = sys.argv[1]
+    parsed_chunk = load_as_tensors(data_path)
+    for raw_data in parsed_chunk:
+        print(repr(raw_data))
+        print(raw_data["oracle_ids"])
+        print(raw_data["oracle_ids"][0])
+        print(raw_data["oracle_ids"].numpy())
 
+"""
     if os.path.isdir(data_path):
         files = os.listdir(data_path)
         for f in files:
@@ -76,3 +83,5 @@ if __name__ == "__main__":
     else:
         transform(data_path)
     print("Done")
+
+"""

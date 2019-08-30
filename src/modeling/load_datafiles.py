@@ -4,11 +4,11 @@ import os
 import struct
 import tensorflow as tf
 
-def as_tensors(bin_path):
+def load_as_tensors(bin_path):
   """
-  \brief  Parse the binary file into a record.
+  brief  Parse the binary file into a record.
 
-  \example
+  example
     parsed_chunk = as_tensors('path/to/data.bin')
     for parsed_record in parsed_chunk.take(10):
       target_sum = parsed_record["abstract"]
@@ -20,6 +20,7 @@ def as_tensors(bin_path):
   feature_description = {
       'article': tf.io.FixedLenFeature([], tf.string, default_value=''),
       'abstract': tf.io.FixedLenFeature([], tf.string, default_value=''),
+      'oracle_ids': tf.io.FixedLenFeature([3], tf.int64, default_value=[0, 0, 0]),
   }
 
   def _parse_function(example_proto):
