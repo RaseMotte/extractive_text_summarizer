@@ -1,13 +1,4 @@
 This is a end of studies' project, realized with Exensa.
-----
-TODO
-
-[] Data reader from .bin for model
-[] Logger
-[] Benchmarks
-[] Gensim summarizer
-[] README
-----
 
 # 1. Packages
 
@@ -18,7 +9,7 @@ pip install --user -r requirements.txt
 
 # 2. Architecture
 
-## data | ```./data```
+## Data | ```./data```
 * Datasets
 * Tokenized files
 * Binarized files
@@ -32,11 +23,11 @@ Folder for storing binary (json or other format) file for local use.
 
 Source code and more information [available here](https://github.com/becxer/cnn-dailymail/).
 
-## Content
+### Content
 * Instructions on how to download dataset.
 * Instructions on how to use the preprocessing scipt.
 
-## Overview
+### Overview
 * Language detection **TODO**
 * Sentence and word tokenization with Stanford CoreNLP
 * Split in train, test and validation sets.
@@ -53,4 +44,14 @@ Produced files are placed in ./data/cnn-dailymail/finished_files_v2/.
 
 ### Models
 
-* Gensim **FIME**
+* Gensim **FIXME**
+
+
+---
+# TODO
+
+- [x] Data writer from tokenized files to binary
+- [ ] Data reader from .bin for model
+- [ ] Logger
+- [ ] Benchmarks
+- [ ] Gensim summarizer
