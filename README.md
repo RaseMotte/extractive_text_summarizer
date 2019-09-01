@@ -23,6 +23,12 @@ Folder for storing binary (json or other format) file for local use.
 
 Source code and more information [available here](https://github.com/becxer/cnn-dailymail/).
 
+
+### Run it
+```
+cd src/preprocessing && python3 src/preprocess.py path/to/cnn/stories path/to/dm/stories
+```
+
 ### Content
 * Instructions on how to download dataset.
 * Instructions on how to use the preprocessing scipt.
@@ -33,8 +39,7 @@ Source code and more information [available here](https://github.com/becxer/cnn-
 * Split in train, test and validation sets.
 * Binarization with TensorFlow
 
-Produced files are placed in ./data/cnn-dailymail/finished_files_v2/.
-
+Produced files are placed in ./data/cnn-dailymail/finished_files_v3/.
 
 ## Model structure, training and evaluation | ```./src/modeling```
 

@@ -1,9 +1,24 @@
 import os
 import sys
-from data_builder import num_expected_cnn_stories, num_expected_dm_stories
-from data_builder import check_num_stories, tokenize_stories, write_to_bin, chunk_all, gen_oracle_summary
-from data_builder import CNN_TOKENIZED_STORIES_DIR, DM_TOKENIZED_STORIES_DIR, FINISHED_FILES_DIR
-from data_builder import ALL_TEST_URLS, ALL_TRAIN_URLS, ALL_VAL_URLS
+from make_datafiles import num_expected_cnn_stories, num_expected_dm_stories
+from make_datafiles import tokenize_stories, save_datafiles_in_chunks
+from utils import check_num_stories
+
+SRC_DIR, _ = os.path.split(os.path.dirname(os.path.abspath(__file__)))
+PROJECT_DIR, _ = os.path.split(SRC_DIR)
+DATA_DIR = os.path.join(PROJECT_DIR, "data/cnn-dailymail")
+
+CNN_TOKENIZED_STORIES_DIR = os.path.join(DATA_DIR, "cnn_stories_tokenized_v2")
+DM_TOKENIZED_STORIES_DIR = os.path.join(DATA_DIR, "dm_stories_tokenized_v2")
+
+FINISHED_FILES_DIR = os.path.join(DATA_DIR, "finished_files_v3")
+CHUNKS_DIR = os.path.join(FINISHED_FILES_DIR, "chunked")
+
+ALL_TRAIN_URLS = os.path.join(DATA_DIR, "url_lists/all_train.txt")
+ALL_VAL_URLS = os.path.join(DATA_DIR, "url_lists/all_val.txt")
+ALL_TEST_URLS = os.path.join(DATA_DIR, "url_lists/all_test.txt")
+
+CHUNK_SIZE = 1000  # num examples per chunk, for the chunked data
 
 if __name__ == '__main__':
   if len(sys.argv) != 3:
@@ -21,17 +36,16 @@ if __name__ == '__main__':
     os.makedirs(CNN_TOKENIZED_STORIES_DIR)
   if not os.path.exists(DM_TOKENIZED_STORIES_DIR):
     os.makedirs(DM_TOKENIZED_STORIES_DIR)
-  if not os.path.exists(FINISHED_FILES_DIR):
-    os.makedirs(FINISHED_FILES_DIR)
+  if not os.path.exists(CHUNKS_DIR):
+    os.makedirs(CHUNKS_DIR)
 
   # Run stanford tokenizer on both stories dirs, outputting to tokenized stories directories
-  tokenize_stories(cnn_stories_dir, CNN_TOKENIZED_STORIES_DIR)
-  tokenize_stories(dm_stories_dir, DM_TOKENIZED_STORIES_DIR)
+  #tokenize_stories(cnn_stories_dir, CNN_TOKENIZED_STORIES_DIR)
+  #tokenize_stories(dm_stories_dir, DM_TOKENIZED_STORIES_DIR)
 
-  # Read the tokenized stories, do a little postprocessing, generate the summary, then write to bin files
-  write_to_bin(ALL_TEST_URLS, os.path.join(FINISHED_FILES_DIR, "test.bin"))
-  write_to_bin(ALL_VAL_URLS, os.path.join(FINISHED_FILES_DIR, "val.bin"))
-  write_to_bin(ALL_TRAIN_URLS, os.path.join(FINISHED_FILES_DIR, "train.bin"), makevocab=True)
-
-  # Chunk the data. This splits each of train.bin, val.bin and test.bin into smaller chunks, each containing e.g. 1000 examples, and saves them in finished_files/chunks
-  chunk_all()
+  # Generates the oracle summary.
+  # Saves the result in chunks of 100 containing preprocessed article/abstrac and oracle ids.
+  token_dirs = [CNN_TOKENIZED_STORIES_DIR, DM_TOKENIZED_STORIES_DIR]
+  save_datafiles_in_chunks(token_dirs, CHUNKS_DIR, CHUNK_SIZE, ALL_TRAIN_URLS)
+  save_datafiles_in_chunks(token_dirs, CHUNKS_DIR, CHUNK_SIZE, ALL_TEST_URLS)
+  save_datafiles_in_chunks(token_dirs, CHUNKS_DIR, CHUNK_SIZE, ALL_VAL_URLS)

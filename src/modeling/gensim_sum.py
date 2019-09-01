@@ -2,8 +2,7 @@ import os
 import sys
 import struct
 from gensim.summarization.summarizer import summarize
-from tensorflow.core.example import example_pb2
-from rouge import Rouge
+import tensorflow as tf
 
 from benchmark import log_time
 from load_datafiles import load_as_tensors
@@ -26,13 +25,11 @@ def get_ratio(text):
 
 @log_time(gensim_logger)
 def transform(data_path):
-    str_generator = stringGenerator(data_path)
-    rouge = Rouge()
 
-    _, record_name = os.path.split(data_path)
-    summaries_file = os.path.join(GENSIM_DATA_DIR, 'summaries_%s' % record_name)
+    _, file_name = os.path.split(data_path)
+    summary_file = os.path.join(GENSIM_DATA_DIR, 'summaries_%s' % file_name)
 
-    with open(summaries_file, 'wb') as writer:
+    with open(summary_file, 'wb') as writer:
         record_i = 0
         for article, target_sum in str_generator:
             pr = get_ratio(article)
@@ -64,24 +61,8 @@ def transform(data_path):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print("USAGE: python gensim_sum.py <binary_file_dir>")
-        sys.exit()
-    data_path = sys.argv[1]
-    parsed_chunk = load_as_tensors(data_path)
-    for raw_data in parsed_chunk:
-        print(repr(raw_data))
-        print(raw_data["oracle_ids"])
-        print(raw_data["oracle_ids"][0])
-        print(raw_data["oracle_ids"].numpy())
-
-"""
-    if os.path.isdir(data_path):
-        files = os.listdir(data_path)
-        for f in files:
-            transform(f)
-    else:
-        transform(data_path)
-    print("Done")
-
-"""
+  if len(sys.argv) != 2:
+    print("USAGE: python gensim_sum.py <path/to/story>")
+    sys.exit()
+  story_dir = sys.argv[1]
+  dm_stories_dir = sys.argv[2]

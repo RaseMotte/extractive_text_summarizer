@@ -1,3 +1,6 @@
+import hashlib
+import os
+
 def _get_ngrams(n, text):
     """Calcualtes n-grams.
     Args:
@@ -45,3 +48,28 @@ def cal_rouge(evaluated_ngrams, reference_ngrams):
 
     f1_score = 2.0 * ((precision * recall) / (precision + recall + 1e-8))
     return {"f": f1_score, "p": precision, "r": recall}
+
+
+
+def _read_text_file(text_file):
+  lines = []
+  with open(text_file, "r") as f:
+    for line in f:
+      lines.append(line.strip())
+  return lines
+
+
+def _hashhex(s):
+  """Returns a heximal formated SHA1 hash of the input string."""
+  h = hashlib.sha1()
+  h.update(s.encode())
+  return h.hexdigest()
+
+def _get_url_hashes(url_list):
+  return [_hashhex(url) for url in url_list]
+
+def check_num_stories(stories_dir, num_expected):
+  num_stories = len(os.listdir(stories_dir))
+  if num_stories != num_expected:
+    raise Exception("stories directory %s contains %i files but should contain %i" % (
+        stories_dir, num_stories, num_expected))
