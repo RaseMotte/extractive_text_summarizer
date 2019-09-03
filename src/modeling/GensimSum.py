@@ -4,9 +4,7 @@ import torch
 from gensim.summarization.summarizer import summarize
 from rouge import Rouge
 
-from benchmark import log_time
 from BaseModel import BaseModel
-from ModelLogger import ModelLogger
 
 GENSIM_DATA_DIR = '../../model/gensim_sum_tmp_test'
 

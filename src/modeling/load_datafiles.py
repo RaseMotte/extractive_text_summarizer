@@ -1,51 +1,28 @@
-# Step 1, load the data
+import torch
 
-import os
-import struct
-import tensorflow as tf
+def _make_single_string(text_tokens_list):
+    """
+    Make text into two single strings, putting <s> and </s> tags around the sentences.
+    """
+    text_sent_list = [' '.join(token_list)
+                         for token_list in text_tokens_list]
+    text = ' '.join(sent for sent in text_sent_list)
+    return text
 
-def load_as_tensors(bin_path):
-  """
-  brief  Parse the binary file into a record.
-
-  example
-    parsed_chunk = as_tensors('path/to/data.bin')
-    for parsed_record in parsed_chunk.take(10):
-      target_sum = parsed_record["abstract"]
-      art = parsed_record["article"]
-  """
-  raw_chunk = tf.data.TFRecordDataset(bin_path)
-
-  # Create a description of the features.
-  feature_description = {
-      'article': tf.io.FixedLenFeature([], tf.string, default_value=''),
-      'abstract': tf.io.FixedLenFeature([], tf.string, default_value=''),
-      'oracle_ids': tf.io.FixedLenFeature([3], tf.int64, default_value=[0, 0, 0]),
-  }
-
-  def _parse_function(example_proto):
-    # Parse the input tf.Example proto using the dictionary above.
-    return tf.io.parse_single_example(example_proto, feature_description)
-
-  # apply for each entry the parsing function
-  parsed_chunk = raw_chunk.map(_parse_function)
-  return parsed_chunk
-
-
-def stringGenerator(bin_path):
-  """
-  """
-  with open(bin_path, "rb") as reader:
-      eof = False
-      while not eof:
-          len_bytes = reader.read(8)
-          if not len_bytes:
-              eof = True
-              break
-          str_len = struct.unpack('q', len_bytes)[0]
-          example_str = struct.unpack('%ds' % str_len, reader.read(str_len))[0]
-          #print(example_str)
-          tf_example = tf.train.Example.FromString(example_str)
-          art_byte_rpz = str(tf_example.features.feature['article'].bytes_list.value)
-          abs_byte_rpz = str(tf_example.features.feature['abstract'].bytes_list.value)
-          yield art_byte_rpz, abs_byte_rpz
+def load_chunk_corpus(chunk_file):
+  chunk = torch.load(chunk_file)
+  hash_list = []
+  article_list = []
+  summary_list = []
+  for story in chunk:
+    article_tokens_list = story["article"]
+    if len(article_tokens_list) <= 1:
+      continue
+    oracle_ids = story["oracle_ids"]
+    summary_tokens_list = [article_tokens_list[oid] for oid in oracle_ids]
+    article = _make_single_string(article_tokens_list)
+    summary = _make_single_string(summary_tokens_list)
+    hash_list.append(story["url_hash"])
+    article_list.append(article)
+    summary_list.append(summary)
+  return hash_list, article_list, summary_list
