@@ -8,7 +8,7 @@ from BaseModel import BaseModel
 
 GENSIM_DATA_DIR = '../../model/gensim_sum_tmp_test'
 
-gensim_logger = ModelLogger("gensim_sum")
+#gensim_logger = ModelLogger("gensim_sum")
 
 def _get_ratio(text):
   """
