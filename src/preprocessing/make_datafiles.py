@@ -15,7 +15,7 @@ _END_TOKENS = ['.', '!', '?', '...', "'", "`", '"', _dm_single_close_quote,
                _dm_double_close_quote, ")"]  # acceptable ways to end a sentence
 
 _REMAP = {"-lbr-": "(", "-rbr-": ")", "-lcb-": "{", "-rcb-": "}",
-          "-lsb-": "[", "-rsb-": "]", "``": '"', "''": '"'}
+          "-lsb-": "[", "-rsb-": "]", "``": '"', "''": '"', "•": ".", "•": "."}
 
 
 # These are the number of .story files we expect there to be in cnn_stories_dir and dm_stories_dir
@@ -173,8 +173,8 @@ def gen_oracle_summary(story_file):
     :param story_file:    String. Path to the file with its extension.
   """
   article_tokens_list, abstract_tokens_list = get_art_abs_from_json(story_file)
-  oracles_ids = _greedy_selection(article_tokens_list, abstract_tokens_list, 3)
-  return article_tokens_list, abstract_tokens_list, oracles_ids
+  oracle_ids = _greedy_selection(article_tokens_list, abstract_tokens_list, 3)
+  return article_tokens_list, abstract_tokens_list, oracle_ids
 
 
 def _get_story_path(token_dirs, story_name):
@@ -217,6 +217,7 @@ def save_datafiles_in_chunks(token_dirs, out_dir, chunk_size, url_file):
   """
   Reads the tokenized .story.json files corresponding to the urls
   listed in the url_file and writes them to a out_dir.
+  Chunk will be named after the url list file name.
 
   :param token_dirs:   Array of strings. Path to the directories of tokenized stories.
   :param out_dir:     String. Path to the chunk_directory.
@@ -256,8 +257,9 @@ def save_datafiles_in_chunks(token_dirs, out_dir, chunk_size, url_file):
     # oracles ids refer to sentences forming the target extractive summary.
     article_tokens_list, abstract_tokens_list, oracle_ids = gen_oracle_summary(
         story_file)
-
-    b_data_dict = {"article": article_tokens_list,
+    _, story_fname = os.path.split(s)
+    url_hash, _ = os.path.splitext(story_fname)
+    b_data_dict = {"url_hash": url_hash, "article": article_tokens_list,
                    "abstract": abstract_tokens_list, "oracle_ids": oracle_ids}
     chunk.append(b_data_dict)
 

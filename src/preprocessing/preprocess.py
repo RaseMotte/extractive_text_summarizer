@@ -11,7 +11,7 @@ DATA_DIR = os.path.join(PROJECT_DIR, "data/cnn-dailymail")
 CNN_TOKENIZED_STORIES_DIR = os.path.join(DATA_DIR, "cnn_stories_tokenized_v2")
 DM_TOKENIZED_STORIES_DIR = os.path.join(DATA_DIR, "dm_stories_tokenized_v2")
 
-FINISHED_FILES_DIR = os.path.join(DATA_DIR, "finished_files_v3")
+FINISHED_FILES_DIR = os.path.join(DATA_DIR, "finished_files_v4")
 CHUNKS_DIR = os.path.join(FINISHED_FILES_DIR, "chunked")
 
 ALL_TRAIN_URLS = os.path.join(DATA_DIR, "url_lists/all_train.txt")
@@ -40,8 +40,8 @@ if __name__ == '__main__':
     os.makedirs(CHUNKS_DIR)
 
   # Run stanford tokenizer on both stories dirs, outputting to tokenized stories directories
-  #tokenize_stories(cnn_stories_dir, CNN_TOKENIZED_STORIES_DIR)
-  #tokenize_stories(dm_stories_dir, DM_TOKENIZED_STORIES_DIR)
+  tokenize_stories(cnn_stories_dir, CNN_TOKENIZED_STORIES_DIR)
+  tokenize_stories(dm_stories_dir, DM_TOKENIZED_STORIES_DIR)
 
   # Generates the oracle summary.
   # Saves the result in chunks of 100 containing preprocessed article/abstrac and oracle ids.

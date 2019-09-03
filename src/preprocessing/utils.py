@@ -49,8 +49,6 @@ def cal_rouge(evaluated_ngrams, reference_ngrams):
     f1_score = 2.0 * ((precision * recall) / (precision + recall + 1e-8))
     return {"f": f1_score, "p": precision, "r": recall}
 
-
-
 def _read_text_file(text_file):
   lines = []
   with open(text_file, "r") as f:
