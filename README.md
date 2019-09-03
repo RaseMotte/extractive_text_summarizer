@@ -14,7 +14,7 @@ pip install --user -r requirements.txt
 * Tokenized files
 * Binarized files
 
-## Intermediate results | ```./model```
+## Intermediate results | ```./model_logs```
 Folder for storing binary (json or other format) file for local use.
 
 * model metadata: date, size of training data, ect **FIXME**
@@ -55,8 +55,11 @@ Produced files are placed in ./data/cnn-dailymail/finished_files_v3/.
 ---
 # TODO
 
-- [x] Data writer from tokenized files to binary
-- [ ] Data reader from .bin for model
+- [x] Script to transform data set to workable corpus.
+- [x] Serializer for the corpus.
+- [ ] Loader for the serialized data to be used with model.
+- [ ] Pydoc
 - [ ] Logger
-- [ ] Benchmarks
+- [ ] Benchmark tools
+- [ ] Model interface
 - [ ] Gensim summarizer
