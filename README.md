@@ -19,13 +19,13 @@ pip install sphinx sphinx-rtd-theme
 # TODO
 
 Basic stuff:
-[x] requirements.txt
-[x] Document main function 'run_summaries()'
-[x] Add eXensa stuff to git
-[ ] Script to generate doc
+- [x] requirements.txt
+- [x] Document main function 'run_summaries()'
+- [x] Add eXensa stuff to git
+- [ ] Script to generate doc
 
 Model stuff
-[ ]
+- [ ]
 
 
 
