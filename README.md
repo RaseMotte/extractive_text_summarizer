@@ -9,24 +9,20 @@
 pip install -r requirements.txt
 ```
 
-# Documentation
-
-Make sure to have sphinx installed and the cool theme:
-```
-pip install sphinx sphinx-rtd-theme
-```
-
 # TODO
 
 Basic stuff:
 - [x] requirements.txt
-- [x] Document main function 'run_summaries()'
 - [x] Add eXensa stuff to git
-- [ ] Script to generate doc
+- [x] Document main function 'run_summaries()'
 
-Model stuff
-- [ ]
-
+Documentation to finish
+Process_Summary.ipynb
+- [ ] summary_assembler()
+- [ ] wrapper() rtype
+- [ ] doc_summarizer()
+Generic_Summarizer.ipynb
+- [ ] tr_summarizer()
 
 
 # Resume_Interface.ipynb
