@@ -1,4 +1,7 @@
+jupyter
 nltk
 pandas
 seaborn
 matplotlib
+sphinx
+sphinx-rtd-theme
