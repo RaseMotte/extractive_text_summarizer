@@ -11,14 +11,7 @@ pip install -r requirements.txt
 
 # TODO
 
-Basic stuff:
-- [x] requirements.txt
-- [x] Add eXensa stuff to git
-- [x] Document main function 'run_summaries()'
-
-Documentation to finish
-Generic_Summarizer.ipynb
-- [ ] tr_summarizer()
+- [ ] Wtf is there a linear kernel applied to tfidf matrix ?
 
 
 # Resume_Interface.ipynb
