@@ -17,10 +17,6 @@ Basic stuff:
 - [x] Document main function 'run_summaries()'
 
 Documentation to finish
-Process_Summary.ipynb
-- [ ] summary_assembler()
-- [ ] wrapper() rtype
-- [ ] doc_summarizer()
 Generic_Summarizer.ipynb
 - [ ] tr_summarizer()
 
