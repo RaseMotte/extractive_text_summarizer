@@ -12,6 +12,9 @@ pip install -r requirements.txt
 # TODO
 
 - [ ] Wtf is there a linear kernel applied to tfidf matrix ?
+- [ ] Burutal tokenizer to 10 - meilleur résultat avec 2 askip
+- [ ] html + meta open graph
+- [ ] RageRank Cython
 
 
 # Resume_Interface.ipynb
