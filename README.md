@@ -1,65 +1,65 @@
- Notice pour les résumés.
+This is a end of studies' project, realized with Exensa.
 
-    Created by Sebastien GADIOUX, last modified on Aug 23, 2019
+# 1. Packages
 
-
-# Setup
-
-```
-pip install -r requirements.txt
+Install dependencies for the whole project:
+```sh
+pip install --user -r requirements.txt
 ```
 
+# 2. Architecture
+
+## Data | ```./data```
+* Datasets
+* Tokenized files
+* Binarized files
+
+## Intermediate results | ```./model_logs```
+Folder for storing binary (json or other format) file for local use.
+
+* model metadata: date, size of training data, ect **FIXME**
+
+## Dataset preparation and processing | ```./src/preprocessing```
+
+Source code and more information [available here](https://github.com/becxer/cnn-dailymail/).
+
+
+### Run it
+```
+cd src/preprocessing && python3 src/preprocess.py path/to/cnn/stories path/to/dm/stories
+```
+
+### Content
+* Instructions on how to download dataset.
+* Instructions on how to use the preprocessing scipt.
+
+### Overview
+* Language detection **TODO**
+* Sentence and word tokenization with Stanford CoreNLP
+* Split in train, test and validation sets.
+* Binarization with TensorFlow
+
+Produced files are placed in ./data/cnn-dailymail/finished_files_v3/.
+
+## Model structure, training and evaluation | ```./src/modeling```
+
+* All model tested or to test.
+* A logger
+* Tools for benchmarking
+
+### Models
+
+* Gensim **FIXME**
+
+
+---
 # TODO
 
-- [ ] Wtf is there a linear kernel applied to tfidf matrix ?
-- [ ] Burutal tokenizer to 10 - meilleur résultat avec 2 askip
-- [ ] html + meta open graph
-- [ ] RageRank Cython
-
-
-# Resume_Interface.ipynb
-
-Le fichier principal est Resume_Interface.ipynb.
-
-La première cellule est la cellule d'import des librairies et d'exécution.
-
-La deuxième est une cellule conçue pour afficher une version html du texte à
-résumer avec une coloration différentes pour les phrases choisies.
-
-Les deux cellules suivantes sont conçues pour permettre d'extraire les données
-des corpus à résumer ainsi que  les résumés gold.
-
-
-
-La cellule suivante est celle pour choisir les méthodes utilisées pour
-calculer les résumés.
-
-Vient ensuite la cellule pour initialiser le calcul des scores.
-
-La cellule suivante est la cellule de calcul principale
-
-La cellule suivante est celle pour l'utilisation de la librairies sumy.
-
-La dernière cellule est celle pour l'affichage graphique des résultats.
-
-
-
- # Process_Summary.ipynb
-
-
-Le fichier secondaire Process_Summary.ipynb contient toutes les méthodes pour
-générer les résumés à partir des résultats des méthodes de résumés.
-
-
-Les méthodes de calculs sont toutes dans le dossier Summary_Processes
-
-Les méthodes de calcul de résumé sont des classes devant avoir au moins ces
-deux fonctions :
-
-preprocess(corpus) : où l'intégralité du corpus est passé pour faire du
-préprocessing (TFIDF...), ne renvoie rien.
-
-summarize(corpus) : où juste le document est passé sous la forme d'une liste
-de phrases. La méthode renvoie une liste de nombre de même taille que le
-nombre d'élément que le corpus où chaque nombre est un score de
-représentativité du document (le + le mieux).
+- [x] Script to transform data set to workable corpus.
+- [x] Serializer for the corpus.
+- [ ] Loader for the serialized data to be used with model.
+- [ ] Pydoc
+- [ ] Logger
+- [ ] Benchmark tools
+- [ ] Model interface
+- [ ] Gensim summarizer
