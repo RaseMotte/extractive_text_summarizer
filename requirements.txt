@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 jupyter
 nltk
 pandas
@@ -5,3 +6,8 @@ seaborn
 matplotlib
 sumy
 rouge
+=======
+-r src/preprocessing/requirements.txt
+-r src/modeling/requirements.txt
+textacy
+>>>>>>> [MISC] Documentation.
