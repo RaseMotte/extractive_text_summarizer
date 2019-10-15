@@ -6,4 +6,5 @@ matplotlib
 sumy
 rouge
 numpy
-pickle
+beautifulsoup4
+spacy
