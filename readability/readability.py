@@ -35,7 +35,7 @@ def grabContent(link, html, encoding=DEFAULT_ENCODING):
     html = re.sub(replaceBrs, "</p><p>", html)
 
     try:
-        soup = BeautifulSoup(html)
+        soup = BeautifulSoup(html, features="lxml")
     except HTMLParser.HTMLParseError as e:
         raise ReadabilityError('BeautifulSoup parse error: %s' % e)
 
