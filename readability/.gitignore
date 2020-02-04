@@ -1,0 +1,13 @@
+*.pyc
+
+# virtualenv
+.Python
+bin
+lib
+include
+
+*.egg-info
+
+tmp
+build
+dist
